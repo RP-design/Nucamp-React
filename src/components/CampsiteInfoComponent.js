@@ -33,10 +33,10 @@ import { Link } from 'react-router-dom';
                 isModalOpen: !this.state.isModalOpen
             });
         }
-        handleSubmit(event) {
-            alert(`Rating: ${this.rating.value} Author: ${this.author.value} text: ${this.text.value}`);
+        handleSubmit(values) {
             this.toggleModal();
-            event.preventDefault();
+            this.props.addComment(this.props.campsiteId, values.rating, values.author, values.text);
+            
         }
         
 
@@ -52,12 +52,14 @@ import { Link } from 'react-router-dom';
                     <LocalForm onSubmit={values => this.handleSubmit(values)}>
                             <FormGroup>
                                 <Label htmlFor="rating">Rating</Label>
-                                <Control.select options="1-5" model= ".rating" id="rating"name= "rating"
-                                placeholder= "select a number"
-                                className="form-control"
-                                validators={{
-                                    required,
-                                }}/>
+                                <Control.select  model=".rating" id="rating" name="rating" className="form-control">
+                               <option>1</option>
+                               <option>2</option>
+                               <option>3</option>
+                               <option>4</option>
+                               <option>5</option>
+                            </Control.select>
+                                    
                                 
                             </FormGroup>
                             <FormGroup>
@@ -81,27 +83,24 @@ import { Link } from 'react-router-dom';
                                             required: 'Required',
                                             minLength: 'Must be at least 2 characters',
                                             maxLength: 'Must be 15 characters or less'
-                                        }}
+                                            }}
                                     />
 
                                     <Label htmlFor="text">Comment </Label>
-                                    <Control.textarea row="6" model=".textarea" id="textarea" name="textarea" 
+                                    <Control.textarea  rows="6" model=".text" id="text" name="text" 
                                             placeholder="Leave a comment here.."
                                             className="form-control"
                                             validators={{
                                                 required, 
-                                                maxLength: maxLength(200)
+                                                maxLength: maxLength(50)
                                             }}
                                         />
                                         <Errors
                                             className="text-danger"
-                                            model=".textarea"
+                                            model=".text"
                                             show="touched"
                                             component="div"
-                                            messages={{
-                                                required: 'Required',
-                                                maxLength: 'Must be 100 characters or less'
-                                            }}
+                                            
                                         />
                             </FormGroup>
                            
@@ -131,7 +130,7 @@ import { Link } from 'react-router-dom';
             </div>
         );
      }
-     function RenderComments({comments}) {
+     function RenderComments({comments, addComment, campsiteId}) {
         if(comments){
             return (
                 <div className="col-md-5 m-1">
@@ -143,7 +142,7 @@ import { Link } from 'react-router-dom';
                             </div>
                         )
                     })}
-                    <CommentForm/>
+                    <CommentForm campsiteId={campsiteId} addComment={addComment}/>
                 </div> 
                 
             )
@@ -167,7 +166,9 @@ import { Link } from 'react-router-dom';
                     </div>
                     <div className="row">
                         <RenderCampsite campsite={props.campsite} />
-                        <RenderComments comments={props.comments} />
+                        <RenderComments comments={props.comments} 
+                        addComment={props.addComment}
+                        campsiteId={props.campsite.id} />
                     </div>
                 </div>
             );

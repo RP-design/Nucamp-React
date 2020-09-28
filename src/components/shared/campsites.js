@@ -31,4 +31,4 @@ export const CAMPSITES = [
         featured: true,
         description: "You'll never want to leave this hidden gem, deep within the lush Redux Woods."
     }
-];
+]
